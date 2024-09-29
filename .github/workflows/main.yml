@@ -40,4 +40,24 @@ jobs:
           docker push $ECR_REGISTRY/29sep1:github.sha
           echo "image=$ECR_REGISTRY/29sep1:github.sha" >> $GITHUB_OUTPUT
 
+      - name: Create ECS Cluster
+        run: |
+          aws ecs create-cluster --cluster-name nginx-cluster
+     # Step to register task definition
+      - name: Register Task Definition
+        run: |
+          aws ecs register-task-definition \
+            --family nginx-task \
+            --container-definitions '[{"name":"29sep1","image":"207567789528.dkr.ecr.ap-south-1.amazonaws.com/29sep1:github.sha","portMappings":[{"containerPort":80}],"memoryReservation":128}]'
+     # Step to create ECS service
+      - name: Create ECS Service
+        run: |
+          aws ecs create-service \
+            --cluster nginx-cluster \
+            --service-name nginx-service \
+            --task-definition nginx-task \
+            --desired-count 1 \
+            --launch-type EC2 \
+            --region ${{ env.AWS_REGION }}
+
     
