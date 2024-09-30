@@ -36,7 +36,7 @@ jobs:
           # Build a docker container and
           # push it to ECR so that it can
           # be deployed to ECS.
-          docker build -t $ECR_REGISTRY/29sep1:${{ github.sha }} -f Dockerfile .
+          docker build -t $ECR_REGISTRY/29sep1:${{ github.sha }} -f Dockerfile.yml .
           docker push $ECR_REGISTRY/29sep1:${{ github.sha }}
           echo "image=$ECR_REGISTRY/29sep1:${{ github.sha }}" >> $GITHUB_OUTPUT
 
