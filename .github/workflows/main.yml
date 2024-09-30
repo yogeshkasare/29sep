@@ -36,9 +36,10 @@ jobs:
           # Build a docker container and
           # push it to ECR so that it can
           # be deployed to ECS.
-          docker build -t $ECR_REGISTRY/29sep1:github.sha -f Dockerfile.yml .
-          docker push $ECR_REGISTRY/29sep1:github.sha
-          echo "image=$ECR_REGISTRY/29sep1:github.sha" >> $GITHUB_OUTPUT
+          docker build -t $ECR_REGISTRY/29sep1:${{ github.sha }} -f Dockerfile .
+          docker push $ECR_REGISTRY/29sep1:${{ github.sha }}
+          echo "image=$ECR_REGISTRY/29sep1:${{ github.sha }}" >> $GITHUB_OUTPUT
+
 
       - name: Create ECS Cluster
         run: |
@@ -46,20 +47,20 @@ jobs:
      # Step to register task definition
       - name: Register Task Definition
         run: |
-          aws ecs register-task-definition \
-            --family nginx-task \
-            --container-definitions '[{"name":"29sep1","image":"207567789528.dkr.ecr.ap-south-1.amazonaws.com/29sep1:github.sha","portMappings":[{"containerPort":80}],"memoryReservation":128}]'
-     # Step to create ECS service
+           aws ecs register-task-definition \
+           --family nginx-task \
+           --container-definitions '[{"name":"29sep1","image":"207567789528.dkr.ecr.ap-south-1.amazonaws.com/29sep1:${{ github.sha }}","portMappings":[{"containerPort":80}],"memoryReservation":128}]'
+    # Step to create ECS service
       - name: Create ECS Service
         run: |
              aws ecs create-service \
-              --cluster nginx-cluster \
-              --service-name nginx-service \
-              --task-definition nginx-task \
-              --desired-count 1 \
-              --launch-type EC2 \
-              --region ${{ env.AWS_REGION }}
-     
+             --cluster nginx-cluster \
+             --service-name nginx-service \
+             --task-definition nginx-task \
+             --desired-count 1 \
+             --launch-type EC2 \
+             --region ${{ env.AWS_REGION }}
+
 
 
 
