@@ -52,12 +52,13 @@ jobs:
      # Step to create ECS service
       - name: Create ECS Service
         run: |
-          aws ecs create-service \
-            --cluster nginx-cluster \
-            --service-name nginx-service \
-            --task-definition nginx-task \
-            --desired-count 1 \
-            --launch-type FARGATE \
-            --region ${{ env.AWS_REGION }}
+           aws ecs create-service \
+           --cluster nginx-cluster \
+           --service-name nginx-service \
+           --task-definition nginx-task \
+           --desired-count 1 \
+           --launch-type FARGATE \
+           --region ${{ env.AWS_REGION }} \
+           --network-configuration "awsvpcConfiguration={subnets=[subnet-0339dfcb9d3c55380],securityGroups=[sg-0f3f7fdd22ea8cb54],assignPublicIp=ENABLED}"
 
     
