@@ -48,6 +48,7 @@ jobs:
       - name: Register Task Definition
         run: |
            aws ecs register-task-definition \
+           --requires-compatibilities FARGATE \
            --family nginx-task \
            --container-definitions '[{"name":"29sep1","image":"207567789528.dkr.ecr.ap-south-1.amazonaws.com/29sep1:${{ github.sha }}","portMappings":[{"containerPort":80}],"memoryReservation":128}]'
     # Step to create ECS service
