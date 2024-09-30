@@ -57,7 +57,7 @@ jobs:
               --service-name nginx-service \
               --task-definition nginx-task \
               --desired-count 1 \
-              --launch-type FARGATE \
+              --launch-type EC2 \
               --region ${{ env.AWS_REGION }}
      
 
